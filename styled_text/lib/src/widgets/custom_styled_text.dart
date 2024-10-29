@@ -7,7 +7,9 @@ import 'package:styled_text/src/widgets/styled_text.dart';
 
 /// The builder callback for the [CustomStyledText] widget.
 typedef StyledTextWidgetBuilderCallback = Widget Function(
-    BuildContext context, TextSpan textSpan);
+  BuildContext context,
+  TextSpan textSpan,
+);
 
 /// The text parser builder callback signature for the [CustomStyledText] widget.
 typedef StyledTextWidgetParserBuilderCallback = StyledTextParser Function(
@@ -104,11 +106,22 @@ class _CustomStyledTextState extends State<CustomStyledText> {
   TextSpan? _textSpans;
   StyledNode? _rootNode;
 
-  late final StyledTextParser _parser =
-      (widget.textParserBuilder ?? _defaultParserBuilder)(_tag, _parsed);
+  late final StyledTextParser _parser;
 
-  StyledTextParser _defaultParserBuilder(
-      StyledTextParserTagCallback onTag, StyledTextParserCallback onParsed) {
+  @override
+  void initState() {
+    super.initState();
+    _parser = _getParserBuilder(_getTag, _buildSpan);
+  }
+
+  StyledTextParser _getParserBuilder(
+    StyledTextParserTagCallback onTag,
+    StyledTextParserCallback onParsed,
+  ) {
+    if (widget.textParserBuilder != null) {
+      return widget.textParserBuilder!(onTag, onParsed);
+    }
+
     return StyledTextParserSync(
       onTag: onTag,
       onParsed: onParsed,
@@ -133,7 +146,7 @@ class _CustomStyledTextState extends State<CustomStyledText> {
     }
   }
 
-  StyledTextTagBase? _tag(String? tagName) {
+  StyledTextTagBase? _getTag(String? tagName) {
     if (tagName == null) return null;
 
     if (widget.tags.containsKey(tagName)) {
@@ -143,9 +156,14 @@ class _CustomStyledTextState extends State<CustomStyledText> {
     return null;
   }
 
-  // Parse text
   void _updateTextSpans({bool force = false}) {
-    if ((_text != widget.text) || (_textSpans == null) || force) {
+    final hasSameText = _text == widget.text;
+    final hasSpan = _textSpans != null;
+    final hasRootNode = _rootNode != null;
+
+    if (hasSameText && hasSpan && hasRootNode && !force) return;
+
+    if (!hasRootNode) {
       _text = widget.text;
 
       String? textValue = _text;
@@ -159,28 +177,23 @@ class _CustomStyledTextState extends State<CustomStyledText> {
       _rootNode = null;
 
       _parser.parse(textValue);
-    } else {
-      if (_rootNode != null && _textSpans == null) {
-        _buildTextSpans(_rootNode);
-      }
+      return;
     }
+
+    _buildTextSpans(_rootNode);
   }
 
-  void _parsed(StyledNode? node, bool async) {
+  void _buildSpan(StyledNode? node, bool async) {
     _rootNode = node;
     _buildTextSpans(_rootNode);
   }
 
   void _buildTextSpans(StyledNode? node) {
-    if (node != null) {
-      if (mounted) {
-        final span = node.createSpan(context: context);
-        _textSpans = TextSpan(children: [span]);
-        setState(() {});
-      } else {
-        _textSpans = null;
-      }
-    }
+    if (node == null || !mounted) return;
+
+    final span = node.createSpan(context: context);
+    _textSpans = TextSpan(children: [span]);
+    setState(() {});
   }
 
   @override
@@ -193,8 +206,9 @@ class _CustomStyledTextState extends State<CustomStyledText> {
       effectiveTextStyle = defaultTextStyle.style.merge(widget.style);
     }
     if (MediaQuery.boldTextOf(context)) {
-      effectiveTextStyle = effectiveTextStyle!
-          .merge(const TextStyle(fontWeight: FontWeight.bold));
+      effectiveTextStyle = effectiveTextStyle!.merge(
+        const TextStyle(fontWeight: FontWeight.bold),
+      );
     }
 
     final span = TextSpan(
@@ -202,6 +216,6 @@ class _CustomStyledTextState extends State<CustomStyledText> {
       children: [_textSpans!],
     );
 
-    return widget.builder.call(context, span);
+    return widget.builder(context, span);
   }
 }

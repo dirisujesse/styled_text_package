@@ -6,6 +6,8 @@ import 'package:styled_text/src/parsers/text_parser_async.dart';
 import 'package:styled_text/src/parsers/text_parser_sync.dart';
 import 'package:styled_text/src/tags/styled_text_tag_base.dart';
 import 'package:styled_text/src/widgets/custom_styled_text.dart';
+import 'package:styled_text/src/widgets/styled_rich_text.dart';
+import 'package:styled_text/src/widgets/styled_selectable_rich_text.dart';
 
 ///
 /// Text widget with formatting via tags.
@@ -132,12 +134,12 @@ class StyledText extends StatelessWidget {
   /// and flickering is also possible, because first, the widget is rendered empty,
   /// and then (when asynchronous parsing is completed), the widget is redrawn
   /// with the final formatted text.
-  final bool async;
+  final bool parseAsynchronously;
 
   /// Create a text widget with formatting via tags.
   ///
   const StyledText({
-    Key? key,
+    super.key,
     required this.text,
     this.newLineAsBreaks = true,
     this.style,
@@ -153,7 +155,7 @@ class StyledText extends StatelessWidget {
     this.strutStyle,
     this.textWidthBasis,
     this.textHeightBehavior,
-    this.async = false,
+    this.parseAsynchronously = false,
   })  : this.tags = tags ?? const {},
         this.selectable = false,
         this._focusNode = null,
@@ -175,13 +177,13 @@ class StyledText extends StatelessWidget {
         this._onTap = null,
         this._scrollPhysics = null,
         this._semanticsLabel = null,
-        super(key: key);
+        assert(!(textScaleFactor != null && textScaler != null));
 
   /// Create a selectable text widget with formatting via tags.
   ///
   /// See [SelectableText.rich] for more options.
   const StyledText.selectable({
-    Key? key,
+    super.key,
     required this.text,
     this.newLineAsBreaks = false,
     this.style,
@@ -197,7 +199,7 @@ class StyledText extends StatelessWidget {
     FocusNode? focusNode,
     bool showCursor = false,
     bool autofocus = false,
-    this.async = false,
+    this.parseAsynchronously = false,
     @Deprecated(
       'Use `contextMenuBuilder` instead. '
       'This feature was deprecated after Flutter v3.3.0-0.5.pre.',
@@ -248,8 +250,7 @@ class StyledText extends StatelessWidget {
         this._enableInteractiveSelection = enableInteractiveSelection,
         this._onTap = onTap,
         this._scrollPhysics = scrollPhysics,
-        this._semanticsLabel = semanticsLabel,
-        super(key: key);
+        this._semanticsLabel = semanticsLabel;
 
   final FocusNode? _focusNode;
   final bool _showCursor;
@@ -274,114 +275,86 @@ class StyledText extends StatelessWidget {
   final String? _semanticsLabel;
 
   static Widget _defaultContextMenuBuilder(
-      BuildContext context, EditableTextState editableTextState) {
+    BuildContext context,
+    EditableTextState editableTextState,
+  ) {
     return AdaptiveTextSelectionToolbar.editableText(
       editableTextState: editableTextState,
     );
   }
 
-  Widget _buildText(BuildContext context, TextSpan textSpan) {
-    final defaultTextStyle = DefaultTextStyle.of(context);
-    final registrar = SelectionContainer.maybeOf(context);
-
-    final effectiveTextScaler = textScaler ??
-        // ignore: deprecated_member_use_from_same_package
-        ((textScaleFactor != null)
-            // ignore: deprecated_member_use_from_same_package
-            ? TextScaler.linear(textScaleFactor!)
-            : null) ??
-        MediaQuery.textScalerOf(context);
-
-    Widget result = RichText(
-      textAlign: textAlign ?? defaultTextStyle.textAlign ?? TextAlign.start,
-      textDirection: textDirection,
-      softWrap: softWrap ?? defaultTextStyle.softWrap,
-      overflow:
-          overflow ?? textSpan.style?.overflow ?? defaultTextStyle.overflow,
-      textScaler: effectiveTextScaler,
-      maxLines: maxLines ?? defaultTextStyle.maxLines,
-      locale: locale,
-      strutStyle: strutStyle,
-      textWidthBasis: textWidthBasis ?? defaultTextStyle.textWidthBasis,
-      textHeightBehavior: textHeightBehavior ??
-          defaultTextStyle.textHeightBehavior ??
-          DefaultTextHeightBehavior.maybeOf(context),
-      text: textSpan,
-      selectionRegistrar: registrar,
-      selectionColor: DefaultSelectionStyle.of(context).selectionColor,
-    );
-
-    if (registrar != null) {
-      result = MouseRegion(
-        cursor: SystemMouseCursors.text,
-        child: result,
-      );
-    }
-
-    return result;
-  }
-
-  Widget _buildSelectableText(BuildContext context, TextSpan textSpan) {
-    final defaultTextStyle = DefaultTextStyle.of(context);
-
-    final effectiveTextScaler = textScaler ??
-        // ignore: deprecated_member_use_from_same_package
-        ((textScaleFactor != null)
-            // ignore: deprecated_member_use_from_same_package
-            ? TextScaler.linear(textScaleFactor!)
-            : null) ??
-        MediaQuery.textScalerOf(context);
-
-    return SelectableText.rich(
-      textSpan,
-      focusNode: _focusNode,
-      showCursor: _showCursor,
-      autofocus: _autofocus,
-      // ignore: deprecated_member_use
-      toolbarOptions: _toolbarOptions,
-      contextMenuBuilder: _contextMenuBuilder,
-      selectionControls: _selectionControls,
-      selectionHeightStyle: _selectionHeightStyle!,
-      selectionWidthStyle: _selectionWidthStyle!,
-      onSelectionChanged: _onSelectionChanged,
-      magnifierConfiguration: _magnifierConfiguration,
-      cursorWidth: _cursorWidth!,
-      cursorHeight: _cursorHeight,
-      cursorRadius: _cursorRadius,
-      cursorColor: _cursorColor,
-      dragStartBehavior: _dragStartBehavior,
-      enableInteractiveSelection: _enableInteractiveSelection,
-      onTap: _onTap,
-      scrollPhysics: _scrollPhysics,
-      textWidthBasis: textWidthBasis ?? defaultTextStyle.textWidthBasis,
-      textHeightBehavior: textHeightBehavior ??
-          defaultTextStyle.textHeightBehavior ??
-          DefaultTextHeightBehavior.maybeOf(context),
-      textAlign: textAlign ?? defaultTextStyle.textAlign ?? TextAlign.start,
-      textDirection: textDirection,
-      // softWrap
-      // overflow
-      textScaler: effectiveTextScaler,
-      maxLines: maxLines ?? defaultTextStyle.maxLines,
-      // locale
-      strutStyle: strutStyle,
-      semanticsLabel: _semanticsLabel,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
+    TextScaler effectiveTextScaler =
+        textScaler ?? MediaQuery.textScalerOf(context);
+
+    // ignore: deprecated_member_use_from_same_package
+    if (textScaleFactor != null) {
+      // ignore: deprecated_member_use_from_same_package
+      effectiveTextScaler = TextScaler.linear(textScaleFactor!);
+    }
+
     return CustomStyledText(
+      key: ValueKey(text),
       style: style,
       newLineAsBreaks: newLineAsBreaks,
       text: text,
       tags: tags,
-      builder: selectable ? _buildSelectableText : _buildText,
-      textParserBuilder: async
-          ? ((onTag, onParsed) =>
-              StyledTextParserAsync(onTag: onTag, onParsed: onParsed))
-          : ((onTag, onParsed) =>
-              StyledTextParserSync(onTag: onTag, onParsed: onParsed)),
+      builder: (BuildContext context, TextSpan textSpan) {
+        if (!selectable) {
+          return StyledRichText(
+            textSpan,
+            textScaler: effectiveTextScaler,
+            textAlign: textAlign,
+            textDirection: textDirection,
+            softWrap: softWrap,
+            overflow: overflow,
+            maxLines: maxLines,
+            locale: locale,
+            strutStyle: strutStyle,
+            textWidthBasis: textWidthBasis,
+            textHeightBehavior: textHeightBehavior,
+            key: ValueKey("$text-plain-rich"),
+          );
+        }
+        return StyledSelectableText(
+          textSpan,
+          focusNode: _focusNode,
+          showCursor: _showCursor,
+          autofocus: _autofocus,
+          // ignore: deprecated_member_use, deprecated_member_use_from_same_package
+          toolbarOptions: _toolbarOptions,
+          contextMenuBuilder: _contextMenuBuilder,
+          selectionControls: _selectionControls,
+          selectionHeightStyle: _selectionHeightStyle!,
+          selectionWidthStyle: _selectionWidthStyle!,
+          onSelectionChanged: _onSelectionChanged,
+          magnifierConfiguration: _magnifierConfiguration,
+          cursorWidth: _cursorWidth!,
+          cursorHeight: _cursorHeight,
+          cursorRadius: _cursorRadius,
+          cursorColor: _cursorColor,
+          dragStartBehavior: _dragStartBehavior,
+          enableInteractiveSelection: _enableInteractiveSelection,
+          onTap: _onTap,
+          scrollPhysics: _scrollPhysics,
+          textWidthBasis: textWidthBasis,
+          textHeightBehavior: textHeightBehavior,
+          textAlign: textAlign,
+          textDirection: textDirection,
+          textScaler: effectiveTextScaler,
+          maxLines: maxLines,
+          strutStyle: strutStyle,
+          semanticsLabel: _semanticsLabel,
+          key: ValueKey("$text-selectable-rich"),
+        );
+      },
+      textParserBuilder: (onTag, onParsed) {
+        if (!parseAsynchronously) {
+          return StyledTextParserSync(onTag: onTag, onParsed: onParsed);
+        }
+        return StyledTextParserAsync(onTag: onTag, onParsed: onParsed);
+      },
     );
   }
 }

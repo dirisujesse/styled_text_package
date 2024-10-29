@@ -17,7 +17,9 @@ class StyledTextActionTag extends StyledTextTag {
 
   @override
   GestureRecognizer? createRecognizer(
-      String? text, Map<String?, String?> attributes) {
+    String? text,
+    Map<String?, String?> attributes,
+  ) {
     return TapGestureRecognizer()..onTap = () => onTap(text, attributes);
   }
 }

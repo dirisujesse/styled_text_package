@@ -24,4 +24,6 @@ abstract class StyledTextTagBase {
 
 /// Callback to an action called from a style (for example, tapping text inside a style).
 typedef StyledTextTagActionCallback = void Function(
-    String? text, Map<String?, String?> attributes);
+  String? text,
+  Map<String?, String?> attributes,
+);

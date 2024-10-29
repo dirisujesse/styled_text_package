@@ -28,7 +28,7 @@ class StartPage extends StatefulWidget {
 }
 
 class _StartPageState extends State<StartPage> {
-  bool async = false;
+  bool parseAsynchronously = false;
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +46,9 @@ class _StartPageState extends State<StartPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Switch.adaptive(
-                    value: async,
+                    value: parseAsynchronously,
                     onChanged: (value) => setState(() {
-                      async = value;
+                      parseAsynchronously = value;
                     }),
                   ),
                   const SizedBox(width: 8.0),
@@ -62,7 +62,11 @@ class _StartPageState extends State<StartPage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => SimpleDemoPage(async: async)),
+                    MaterialPageRoute(
+                      builder: (context) => SimpleDemoPage(
+                        parseAsynchronously: parseAsynchronously,
+                      ),
+                    ),
                   );
                 },
                 child: const Text('Simple Demo'),
@@ -76,7 +80,11 @@ class _StartPageState extends State<StartPage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => LargeTextDemo(async: async)),
+                    MaterialPageRoute(
+                      builder: (context) => LargeTextDemo(
+                        parseAsynchronously: parseAsynchronously,
+                      ),
+                    ),
                   );
                 },
                 child: const Text('Large Text Demo'),
@@ -90,7 +98,11 @@ class _StartPageState extends State<StartPage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ListDemo(async: async)),
+                    MaterialPageRoute(
+                      builder: (context) => ListDemo(
+                        parseAsynchronously: parseAsynchronously,
+                      ),
+                    ),
                   );
                 },
                 child: const Text('List Demo'),
@@ -104,11 +116,11 @@ class _StartPageState extends State<StartPage> {
 }
 
 class SimpleDemoPage extends StatelessWidget {
-  final bool async;
+  final bool parseAsynchronously;
 
   const SimpleDemoPage({
     super.key,
-    this.async = false,
+    this.parseAsynchronously = false,
   });
 
   void _alert(BuildContext context) {
@@ -169,61 +181,69 @@ class SimpleDemoPage extends StatelessWidget {
               children: <Widget>[
                 // Simple formatted text
                 StyledText(
-                  async: async,
+                  parseAsynchronously: parseAsynchronously,
                   text: 'Test: <b>bold</b> text.',
                   tags: const {
-                    'b': StyledTextTag(style: TextStyle(fontWeight: FontWeight.bold)),
+                    'b': StyledTextTag(
+                        style: TextStyle(fontWeight: FontWeight.bold)),
                   },
                 ),
 
                 // Text with quotes
                 const SizedBox(height: 20),
                 StyledText(
-                  async: async,
+                  parseAsynchronously: parseAsynchronously,
                   text: 'Quoted Test: <b>&quot;bold&quot;</b> text.',
                   tags: const {
-                    'b': StyledTextTag(style: TextStyle(fontWeight: FontWeight.bold)),
+                    'b': StyledTextTag(
+                        style: TextStyle(fontWeight: FontWeight.bold)),
                   },
                 ),
 
                 // Multiline text without breaks
                 const SizedBox(height: 20),
                 StyledText(
-                  async: async,
+                  parseAsynchronously: parseAsynchronously,
                   text: """Multiline text 
 (wo breaks)""",
                   tags: const {
-                    'b': StyledTextTag(style: TextStyle(fontWeight: FontWeight.bold)),
+                    'b': StyledTextTag(
+                        style: TextStyle(fontWeight: FontWeight.bold)),
                   },
                 ),
 
                 // Multiline text with breaks
                 const SizedBox(height: 20),
                 StyledText(
-                  async: async,
+                  parseAsynchronously: parseAsynchronously,
                   text: """Multiline text
 (with breaks)""",
                   newLineAsBreaks: true,
                   tags: const {
-                    'b': StyledTextTag(style: TextStyle(fontWeight: FontWeight.bold)),
+                    'b': StyledTextTag(
+                        style: TextStyle(fontWeight: FontWeight.bold)),
                   },
                 ),
 
                 // Custom tags styles
                 const SizedBox(height: 20),
                 StyledText(
-                  async: async,
-                  text: 'Test: <bold>bold</bold> and <red>red color</red> text.',
+                  parseAsynchronously: parseAsynchronously,
+                  text:
+                      'Test: <bold>bold</bold> and <red>red color</red> text.',
                   tags: const {
-                    'bold': StyledTextTag(style: TextStyle(fontWeight: FontWeight.bold)),
-                    'red': StyledTextTag(style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red)),
+                    'bold': StyledTextTag(
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    'red': StyledTextTag(
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.red)),
                   },
                 ),
 
                 // Icon
                 const SizedBox(height: 20),
                 StyledText(
-                  async: async,
+                  parseAsynchronously: parseAsynchronously,
                   text: 'Text with alarm <alarm/> icon.',
                   tags: const {
                     'alarm': StyledTextIconTag(Icons.alarm),
@@ -233,12 +253,13 @@ class SimpleDemoPage extends StatelessWidget {
                 // Action
                 const SizedBox(height: 20),
                 StyledText(
-                  async: async,
+                  parseAsynchronously: parseAsynchronously,
                   text: 'Text with <action>action</action> inside.',
                   tags: {
                     'action': StyledTextActionTag(
                       (_, attrs) => _alert(context),
-                      style: const TextStyle(decoration: TextDecoration.underline),
+                      style:
+                          const TextStyle(decoration: TextDecoration.underline),
                     ),
                   },
                 ),
@@ -246,12 +267,14 @@ class SimpleDemoPage extends StatelessWidget {
                 // Link
                 const SizedBox(height: 20),
                 StyledText(
-                  async: async,
-                  text: 'Text with <link href="https://flutter.dev">link</link> inside.',
+                  parseAsynchronously: parseAsynchronously,
+                  text:
+                      'Text with <link href="https://flutter.dev">link</link> inside.',
                   tags: {
                     'link': StyledTextActionTag(
                       (_, attrs) => _openLink(context, attrs),
-                      style: const TextStyle(decoration: TextDecoration.underline),
+                      style:
+                          const TextStyle(decoration: TextDecoration.underline),
                     ),
                   },
                 ),
@@ -259,12 +282,14 @@ class SimpleDemoPage extends StatelessWidget {
                 // SelectableText with Link
                 const SizedBox(height: 20),
                 StyledText.selectable(
-                  async: async,
-                  text: 'Selectable text with <link href="https://flutter.dev">link</link> inside.',
+                  parseAsynchronously: parseAsynchronously,
+                  text:
+                      'Selectable text with <link href="https://flutter.dev">link</link> inside.',
                   tags: {
                     'link': StyledTextActionTag(
                       (_, attrs) => _openLink(context, attrs),
-                      style: const TextStyle(decoration: TextDecoration.underline),
+                      style:
+                          const TextStyle(decoration: TextDecoration.underline),
                     ),
                   },
                 ),
@@ -272,7 +297,7 @@ class SimpleDemoPage extends StatelessWidget {
                 // Text with superscript
                 const SizedBox(height: 20),
                 StyledText(
-                  async: async,
+                  parseAsynchronously: parseAsynchronously,
                   text: "Famous equation: E=mc<sup>2</sup>",
                   tags: {
                     'sup': StyledTextWidgetBuilderTag(
@@ -281,7 +306,8 @@ class SimpleDemoPage extends StatelessWidget {
                           offset: const Offset(0.5, -4),
                           child: Text(
                             textContent ?? "",
-                            textScaler: TextScaler.linear(MediaQuery.of(context).textScaler.scale(0.85)),
+                            textScaler: TextScaler.linear(
+                                MediaQuery.of(context).textScaler.scale(0.85)),
                           ),
                         );
                       },
@@ -292,7 +318,7 @@ class SimpleDemoPage extends StatelessWidget {
                 // Text with subscript
                 const SizedBox(height: 20),
                 StyledText(
-                  async: async,
+                  parseAsynchronously: parseAsynchronously,
                   text: "The element of life: H<sub>2</sub>0",
                   tags: {
                     'sub': StyledTextWidgetBuilderTag(
@@ -301,7 +327,8 @@ class SimpleDemoPage extends StatelessWidget {
                           offset: const Offset(0.5, 4),
                           child: Text(
                             textContent ?? "",
-                            textScaler: TextScaler.linear(MediaQuery.of(context).textScaler.scale(0.8)),
+                            textScaler: TextScaler.linear(
+                                MediaQuery.of(context).textScaler.scale(0.8)),
                           ),
                         );
                       },
@@ -312,7 +339,7 @@ class SimpleDemoPage extends StatelessWidget {
                 // Custom attributes
                 const SizedBox(height: 20),
                 StyledText(
-                  async: async,
+                  parseAsynchronously: parseAsynchronously,
                   text:
                       'Text with <text color="#ff5500">custom <text weight="bold" color="#00ca9d">nested</text> tags</text> text.',
                   tags: {
@@ -321,10 +348,15 @@ class SimpleDemoPage extends StatelessWidget {
                       parse: (style, attributes) {
                         // Text color
                         final textColor = attributes['color'];
-                        if (textColor != null && (textColor.substring(0, 1) == '#') && textColor.length >= 6) {
+                        if (textColor != null &&
+                            (textColor.substring(0, 1) == '#') &&
+                            textColor.length >= 6) {
                           final String hexColor = textColor.substring(1);
-                          final String alphaChannel = (hexColor.length == 8) ? hexColor.substring(6, 8) : 'FF';
-                          final Color color = Color(int.parse('0x$alphaChannel${hexColor.substring(0, 6)}'));
+                          final String alphaChannel = (hexColor.length == 8)
+                              ? hexColor.substring(6, 8)
+                              : 'FF';
+                          final Color color = Color(int.parse(
+                              '0x$alphaChannel${hexColor.substring(0, 6)}'));
                           return style?.copyWith(color: color);
                         }
 
@@ -349,11 +381,11 @@ class SimpleDemoPage extends StatelessWidget {
 }
 
 class LargeTextDemo extends StatefulWidget {
-  final bool async;
+  final bool parseAsynchronously;
 
   const LargeTextDemo({
     super.key,
-    this.async = false,
+    this.parseAsynchronously = false,
   });
 
   @override
@@ -384,7 +416,7 @@ class _LargeTextDemoState extends State<LargeTextDemo> {
           padding: const EdgeInsets.all(16.0),
           child: StyledText(
             key: _textKey,
-            async: widget.async,
+            parseAsynchronously: widget.parseAsynchronously,
             text: '''
 Lorem ipsum dolor sit <b>amet</b>, consectetuer adipiscing elit. Sed <i>dapibus, ante ultricies adipiscing pulvinar</i>, enim tellus volutpat odio, vel <b>pretium <i>ligula</i> purus</b> vel ligula. In posuere justo eget libero. Cras consequat quam sit amet metus. Sed vitae nulla. Cras imperdiet sapien vitae ipsum. Curabitur tristique. Aliquam non tellus eget sem commodo tincidunt. Phasellus cursus nunc. Integer vel mi. Aenean rutrum libero sit amet enim. Nunc elementum, erat eu volutpat ultricies, eros justo scelerisque leo, quis sollicitudin purus ipsum at purus. Aenean ut nulla.
 Lorem ipsum dolor sit <b>amet</b>, consectetuer adipiscing elit. Sed <i>dapibus, ante ultricies adipiscing pulvinar</i>, enim tellus volutpat odio, vel <b>pretium <i>ligula</i> purus</b> vel ligula. In posuere justo eget libero. Cras consequat quam sit amet metus. Sed vitae nulla. Cras imperdiet sapien vitae ipsum. Curabitur tristique. Aliquam non tellus eget sem commodo tincidunt. Phasellus cursus nunc. Integer vel mi. Aenean rutrum libero sit amet enim. Nunc elementum, erat eu volutpat ultricies, eros justo scelerisque leo, quis sollicitudin purus ipsum at purus. Aenean ut nulla.
@@ -409,11 +441,11 @@ Lorem ipsum dolor sit <b>amet</b>, consectetuer adipiscing elit. Sed <i>dapibus,
 }
 
 class ListDemo extends StatelessWidget {
-  final bool async;
+  final bool parseAsynchronously;
 
   const ListDemo({
     super.key,
-    this.async = false,
+    this.parseAsynchronously = false,
   });
 
   @override
@@ -426,7 +458,7 @@ class ListDemo extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         itemCount: 100,
         itemBuilder: (context, index) => StyledText(
-          async: async,
+          parseAsynchronously: parseAsynchronously,
           text: '''
 Lorem ipsum dolor sit <b>amet</b>, consectetuer adipiscing elit. Sed <i>dapibus, ante ultricies adipiscing pulvinar</i>, enim tellus volutpat odio.
         ''',
