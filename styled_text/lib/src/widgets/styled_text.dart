@@ -206,8 +206,7 @@ class StyledText extends StatelessWidget {
     )
     // ignore: deprecated_member_use
     ToolbarOptions? toolbarOptions,
-    EditableTextContextMenuBuilder contextMenuBuilder =
-        _defaultContextMenuBuilder,
+    EditableTextContextMenuBuilder? contextMenuBuilder,
     TextSelectionControls? selectionControls,
     ui.BoxHeightStyle selectionHeightStyle = ui.BoxHeightStyle.tight,
     ui.BoxWidthStyle selectionWidthStyle = ui.BoxWidthStyle.tight,
@@ -273,15 +272,6 @@ class StyledText extends StatelessWidget {
   final GestureTapCallback? _onTap;
   final ScrollPhysics? _scrollPhysics;
   final String? _semanticsLabel;
-
-  static Widget _defaultContextMenuBuilder(
-    BuildContext context,
-    EditableTextState editableTextState,
-  ) {
-    return AdaptiveTextSelectionToolbar.editableText(
-      editableTextState: editableTextState,
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
