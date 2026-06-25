@@ -19,10 +19,7 @@ abstract class StyledTextParser {
   final StyledTextParserCallback onParsed;
 
   /// Creates a text parser class that creates a tree of nodes from tagged text.
-  const StyledTextParser({
-    required this.onTag,
-    required this.onParsed,
-  });
+  const StyledTextParser({required this.onTag, required this.onParsed});
 
   /// Parses text and creates a hierarchy of [StyledNode] based on tags and
   /// text pieces in the text.

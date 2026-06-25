@@ -156,28 +156,28 @@ class StyledText extends StatelessWidget {
     this.textWidthBasis,
     this.textHeightBehavior,
     this.parseAsynchronously = false,
-  })  : this.tags = tags ?? const {},
-        this.selectable = false,
-        this._focusNode = null,
-        this._showCursor = false,
-        this._autofocus = false,
-        this._toolbarOptions = null,
-        this._contextMenuBuilder = null,
-        this._selectionControls = null,
-        this._selectionHeightStyle = null,
-        this._selectionWidthStyle = null,
-        this._onSelectionChanged = null,
-        this._magnifierConfiguration = null,
-        this._cursorWidth = null,
-        this._cursorHeight = null,
-        this._cursorRadius = null,
-        this._cursorColor = null,
-        this._dragStartBehavior = DragStartBehavior.start,
-        this._enableInteractiveSelection = false,
-        this._onTap = null,
-        this._scrollPhysics = null,
-        this._semanticsLabel = null,
-        assert(!(textScaleFactor != null && textScaler != null));
+  }) : this.tags = tags ?? const {},
+       this.selectable = false,
+       this._focusNode = null,
+       this._showCursor = false,
+       this._autofocus = false,
+       this._toolbarOptions = null,
+       this._contextMenuBuilder = null,
+       this._selectionControls = null,
+       this._selectionHeightStyle = null,
+       this._selectionWidthStyle = null,
+       this._onSelectionChanged = null,
+       this._magnifierConfiguration = null,
+       this._cursorWidth = null,
+       this._cursorHeight = null,
+       this._cursorRadius = null,
+       this._cursorColor = null,
+       this._dragStartBehavior = DragStartBehavior.start,
+       this._enableInteractiveSelection = false,
+       this._onTap = null,
+       this._scrollPhysics = null,
+       this._semanticsLabel = null,
+       assert(!(textScaleFactor != null && textScaler != null));
 
   /// Create a selectable text widget with formatting via tags.
   ///
@@ -221,35 +221,33 @@ class StyledText extends StatelessWidget {
     GestureTapCallback? onTap,
     ScrollPhysics? scrollPhysics,
     String? semanticsLabel,
-  })  : this.tags = tags ?? const {},
-        this.selectable = true,
-        this.softWrap = true,
-        this.overflow = TextOverflow.clip,
-        this.locale = null,
-        this._focusNode = focusNode,
-        this._showCursor = showCursor,
-        this._autofocus = autofocus,
-        this._toolbarOptions = toolbarOptions ??
-            // ignore: deprecated_member_use
-            const ToolbarOptions(
-              selectAll: true,
-              copy: true,
-            ),
-        this._contextMenuBuilder = contextMenuBuilder,
-        this._selectionHeightStyle = selectionHeightStyle,
-        this._selectionWidthStyle = selectionWidthStyle,
-        this._selectionControls = selectionControls,
-        this._onSelectionChanged = onSelectionChanged,
-        this._magnifierConfiguration = magnifierConfiguration,
-        this._cursorWidth = cursorWidth,
-        this._cursorHeight = cursorHeight,
-        this._cursorRadius = cursorRadius,
-        this._cursorColor = cursorColor,
-        this._dragStartBehavior = dragStartBehavior,
-        this._enableInteractiveSelection = enableInteractiveSelection,
-        this._onTap = onTap,
-        this._scrollPhysics = scrollPhysics,
-        this._semanticsLabel = semanticsLabel;
+  }) : this.tags = tags ?? const {},
+       this.selectable = true,
+       this.softWrap = true,
+       this.overflow = TextOverflow.clip,
+       this.locale = null,
+       this._focusNode = focusNode,
+       this._showCursor = showCursor,
+       this._autofocus = autofocus,
+       this._toolbarOptions =
+           toolbarOptions ??
+           // ignore: deprecated_member_use
+           const ToolbarOptions(selectAll: true, copy: true),
+       this._contextMenuBuilder = contextMenuBuilder,
+       this._selectionHeightStyle = selectionHeightStyle,
+       this._selectionWidthStyle = selectionWidthStyle,
+       this._selectionControls = selectionControls,
+       this._onSelectionChanged = onSelectionChanged,
+       this._magnifierConfiguration = magnifierConfiguration,
+       this._cursorWidth = cursorWidth,
+       this._cursorHeight = cursorHeight,
+       this._cursorRadius = cursorRadius,
+       this._cursorColor = cursorColor,
+       this._dragStartBehavior = dragStartBehavior,
+       this._enableInteractiveSelection = enableInteractiveSelection,
+       this._onTap = onTap,
+       this._scrollPhysics = scrollPhysics,
+       this._semanticsLabel = semanticsLabel;
 
   final FocusNode? _focusNode;
   final bool _showCursor;
@@ -285,7 +283,7 @@ class StyledText extends StatelessWidget {
     }
 
     return CustomStyledText(
-      key: ValueKey(text),
+      key: ValueKey(text.hashCode),
       style: style,
       newLineAsBreaks: newLineAsBreaks,
       text: text,
@@ -304,7 +302,7 @@ class StyledText extends StatelessWidget {
             strutStyle: strutStyle,
             textWidthBasis: textWidthBasis,
             textHeightBehavior: textHeightBehavior,
-            key: ValueKey("$text-plain-rich"),
+            key: ValueKey("${text.hashCode}-plain-rich"),
           );
         }
         return StyledSelectableText(
@@ -336,7 +334,7 @@ class StyledText extends StatelessWidget {
           maxLines: maxLines,
           strutStyle: strutStyle,
           semanticsLabel: _semanticsLabel,
-          key: ValueKey("$text-selectable-rich"),
+          key: ValueKey("${text.hashCode}-selectable-rich"),
         );
       },
       textParserBuilder: (onTag, onParsed) {

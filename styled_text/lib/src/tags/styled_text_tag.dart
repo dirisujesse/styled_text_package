@@ -8,9 +8,7 @@ class StyledTextTag extends StyledTextTagBase {
   /// The TextStyle to apply to this tag.
   final TextStyle? style;
 
-  const StyledTextTag({
-    this.style,
-  });
+  const StyledTextTag({this.style});
 
   @override
   InlineSpan createSpan({

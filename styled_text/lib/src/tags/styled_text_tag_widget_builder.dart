@@ -3,11 +3,12 @@ import 'package:flutter/widgets.dart';
 import 'package:styled_text/src/tags/styled_text_tag_base.dart';
 
 /// Signature for the widget builder function for StyledTextWidgetBuilderTag
-typedef StyledTextWidgetBuilderTagCallback = Widget Function(
-  BuildContext context,
-  Map<String?, String?> attributes,
-  String? textContent,
-);
+typedef StyledTextWidgetBuilderTagCallback =
+    Widget Function(
+      BuildContext context,
+      Map<String?, String?> attributes,
+      String? textContent,
+    );
 
 /// A class in which you can specify the widget builder to
 /// insert in place of the tag.
@@ -78,19 +79,12 @@ class StyledTextWidgetBuilderTag extends StyledTextTagBase {
     }
 
     if (constraints != null) {
-      widget = ConstrainedBox(
-        constraints: constraints!,
-        child: widget,
-      );
+      widget = ConstrainedBox(constraints: constraints!, child: widget);
     }
 
     final InlineSpan span = TextSpan(
       children: [
-        WidgetSpan(
-          child: widget,
-          alignment: alignment,
-          baseline: baseline,
-        ),
+        WidgetSpan(child: widget, alignment: alignment, baseline: baseline),
       ],
     );
 

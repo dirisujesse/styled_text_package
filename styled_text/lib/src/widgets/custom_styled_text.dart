@@ -6,16 +6,15 @@ import 'package:styled_text/src/tags/styled_text_tag_base.dart';
 import 'package:styled_text/src/widgets/styled_text.dart';
 
 /// The builder callback for the [CustomStyledText] widget.
-typedef StyledTextWidgetBuilderCallback = Widget Function(
-  BuildContext context,
-  TextSpan textSpan,
-);
+typedef StyledTextWidgetBuilderCallback =
+    Widget Function(BuildContext context, TextSpan textSpan);
 
 /// The text parser builder callback signature for the [CustomStyledText] widget.
-typedef StyledTextWidgetParserBuilderCallback = StyledTextParser Function(
-  StyledTextParserTagCallback onTag,
-  StyledTextParserCallback onParsed,
-);
+typedef StyledTextWidgetParserBuilderCallback =
+    StyledTextParser Function(
+      StyledTextParserTagCallback onTag,
+      StyledTextParserCallback onParsed,
+    );
 
 ///
 /// Custom widget with formatting via tags.
@@ -122,10 +121,7 @@ class _CustomStyledTextState extends State<CustomStyledText> {
       return widget.textParserBuilder!(onTag, onParsed);
     }
 
-    return StyledTextParserSync(
-      onTag: onTag,
-      onParsed: onParsed,
-    );
+    return StyledTextParserSync(onTag: onTag, onParsed: onParsed);
   }
 
   @override
@@ -211,10 +207,7 @@ class _CustomStyledTextState extends State<CustomStyledText> {
       );
     }
 
-    final span = TextSpan(
-      style: effectiveTextStyle,
-      children: [_textSpans!],
-    );
+    final span = TextSpan(style: effectiveTextStyle, children: [_textSpans!]);
 
     return widget.builder(context, span);
   }

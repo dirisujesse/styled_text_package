@@ -48,30 +48,28 @@ class StyledSelectableText extends StatelessWidget {
     GestureTapCallback? onTap,
     ScrollPhysics? scrollPhysics,
     String? semanticsLabel,
-  })  : this._focusNode = focusNode,
-        this._showCursor = showCursor,
-        this._autofocus = autofocus,
-        this._toolbarOptions = toolbarOptions ??
-            // ignore: deprecated_member_use
-            const ToolbarOptions(
-              selectAll: true,
-              copy: true,
-            ),
-        this._contextMenuBuilder = contextMenuBuilder,
-        this._selectionHeightStyle = selectionHeightStyle,
-        this._selectionWidthStyle = selectionWidthStyle,
-        this._selectionControls = selectionControls,
-        this._onSelectionChanged = onSelectionChanged,
-        this._magnifierConfiguration = magnifierConfiguration,
-        this._cursorWidth = cursorWidth,
-        this._cursorHeight = cursorHeight,
-        this._cursorRadius = cursorRadius,
-        this._cursorColor = cursorColor,
-        this._dragStartBehavior = dragStartBehavior,
-        this._enableInteractiveSelection = enableInteractiveSelection,
-        this._onTap = onTap,
-        this._scrollPhysics = scrollPhysics,
-        this._semanticsLabel = semanticsLabel;
+  }) : this._focusNode = focusNode,
+       this._showCursor = showCursor,
+       this._autofocus = autofocus,
+       this._toolbarOptions =
+           toolbarOptions ??
+           // ignore: deprecated_member_use
+           const ToolbarOptions(selectAll: true, copy: true),
+       this._contextMenuBuilder = contextMenuBuilder,
+       this._selectionHeightStyle = selectionHeightStyle,
+       this._selectionWidthStyle = selectionWidthStyle,
+       this._selectionControls = selectionControls,
+       this._onSelectionChanged = onSelectionChanged,
+       this._magnifierConfiguration = magnifierConfiguration,
+       this._cursorWidth = cursorWidth,
+       this._cursorHeight = cursorHeight,
+       this._cursorRadius = cursorRadius,
+       this._cursorColor = cursorColor,
+       this._dragStartBehavior = dragStartBehavior,
+       this._enableInteractiveSelection = enableInteractiveSelection,
+       this._onTap = onTap,
+       this._scrollPhysics = scrollPhysics,
+       this._semanticsLabel = semanticsLabel;
 
   final FocusNode? _focusNode;
   final bool _showCursor;
