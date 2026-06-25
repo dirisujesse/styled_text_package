@@ -1,5 +1,4 @@
 import 'package:flutter/gestures.dart';
-import 'package:flutter/widgets.dart';
 import 'package:styled_text/src/tags/styled_text_tag_base.dart';
 import 'package:styled_text/src/tags/styled_text_tag.dart';
 
@@ -10,10 +9,7 @@ class StyledTextActionTag extends StyledTextTag {
   /// A callback to be called when the tag is tapped.
   final StyledTextTagActionCallback onTap;
 
-  const StyledTextActionTag(
-    this.onTap, {
-    TextStyle? style,
-  }) : super(style: style);
+  const StyledTextActionTag(this.onTap, {super.style});
 
   @override
   GestureRecognizer? createRecognizer(

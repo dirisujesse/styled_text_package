@@ -9,10 +9,7 @@ import 'package:xml/xml_events.dart';
 class StyledTextParserSync extends StyledTextParser {
   /// Creates a synchronous text parser that builds a tree of tag
   /// nodes and text pieces from text marked with tags.
-  StyledTextParserSync({
-    required super.onTag,
-    required super.onParsed,
-  });
+  StyledTextParserSync({required super.onTag, required super.onParsed});
 
   @override
   void parse(String text) {
@@ -40,12 +37,10 @@ class StyledTextParserSync extends StyledTextParser {
         } else {
           StyledTextTagBase? tag = onTag(e.name);
           node = StyledTagNode(tag: tag);
-          node.configure(
-            {
-              for (final attribute in e.attributes)
-                attribute.name: attribute.value,
-            },
-          );
+          node.configure({
+            for (final attribute in e.attributes)
+              attribute.name: attribute.value,
+          });
         }
         if (e.isSelfClosing) {
           onEndElement();

@@ -3,8 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'package:styled_text/src/tags/styled_text_tag_base.dart';
 
 /// The signature of the tag attribute parser.
-typedef StyledTextCustomTagParser = TextStyle? Function(
-    TextStyle? baseStyle, Map<String?, String?> attributes);
+typedef StyledTextCustomTagParser =
+    TextStyle? Function(TextStyle? baseStyle, Map<String?, String?> attributes);
 
 /// A custom text style, for which you can specify the processing of attributes of the tag.
 ///
@@ -15,10 +15,7 @@ class StyledTextCustomTag extends StyledTextTagBase {
   /// Called when parsing the attributes of a tag.
   final StyledTextCustomTagParser parse;
 
-  const StyledTextCustomTag({
-    required this.parse,
-    this.baseStyle,
-  });
+  const StyledTextCustomTag({required this.parse, this.baseStyle});
 
   @override
   InlineSpan createSpan({
