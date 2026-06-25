@@ -47,7 +47,8 @@ class StyledRichText extends StatelessWidget {
       locale: locale,
       strutStyle: strutStyle,
       textWidthBasis: textWidthBasis ?? defaultTextStyle.textWidthBasis,
-      textHeightBehavior: textHeightBehavior ??
+      textHeightBehavior:
+          textHeightBehavior ??
           defaultTextStyle.textHeightBehavior ??
           DefaultTextHeightBehavior.maybeOf(context),
       text: textSpan,
@@ -56,10 +57,7 @@ class StyledRichText extends StatelessWidget {
     );
 
     if (registrar != null) {
-      result = MouseRegion(
-        cursor: SystemMouseCursors.text,
-        child: result,
-      );
+      result = MouseRegion(cursor: SystemMouseCursors.text, child: result);
     }
 
     return result;

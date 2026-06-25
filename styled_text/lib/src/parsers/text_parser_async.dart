@@ -9,10 +9,7 @@ import 'package:xmlstream/xmlstream.dart';
 class StyledTextParserAsync extends StyledTextParser {
   /// Creates an asynchronous text parser that builds a tree of tag
   /// nodes and text pieces from text marked with tags.
-  StyledTextParserAsync({
-    required super.onTag,
-    required super.onParsed,
-  });
+  StyledTextParserAsync({required super.onTag, required super.onParsed});
 
   XmlStreamer? _xmlStreamer;
 
@@ -32,56 +29,57 @@ class StyledTextParserAsync extends StyledTextParser {
       '<?xml version="1.0" encoding="UTF-8"?><root>$text</root>',
       trimSpaces: false,
     );
-    _xmlStreamer!.read().listen((e) {
-      switch (e.state) {
-        case XmlState.Text:
-        case XmlState.CDATA:
-          node.children.add(
-            StyledTextNode(text: e.value),
-          );
-          break;
+    _xmlStreamer!
+        .read()
+        .listen((e) {
+          switch (e.state) {
+            case XmlState.Text:
+            case XmlState.CDATA:
+              node.children.add(StyledTextNode(text: e.value));
+              break;
 
-        case XmlState.Open:
-          textQueue.addLast(node);
+            case XmlState.Open:
+              textQueue.addLast(node);
 
-          if (e.value == 'br') {
-            node = StyledTextNode(text: "\n");
-          } else {
-            StyledTextTagBase? tag = onTag(e.value);
-            node = StyledTagNode(tag: tag);
-            attributes.addLast({});
+              if (e.value == 'br') {
+                node = StyledTextNode(text: "\n");
+              } else {
+                StyledTextTagBase? tag = onTag(e.value);
+                node = StyledTagNode(tag: tag);
+                attributes.addLast({});
+              }
+
+              break;
+
+            case XmlState.Closed:
+              if (attributes.isNotEmpty) {
+                node.configure(attributes.removeLast());
+              }
+
+              if (textQueue.isNotEmpty) {
+                final StyledNode child = node;
+                node = textQueue.removeLast();
+                node.children.add(child);
+              }
+
+              break;
+
+            case XmlState.Attribute:
+              if (e.key != null && attributes.isNotEmpty) {
+                attributes.last[e.key!] = e.value;
+              }
+              break;
+
+            case XmlState.Comment:
+            case XmlState.StartDocument:
+            case XmlState.EndDocument:
+            case XmlState.Namespace:
+            case XmlState.Top:
+              break;
           }
-
-          break;
-
-        case XmlState.Closed:
-          if (attributes.isNotEmpty) {
-            node.configure(attributes.removeLast());
-          }
-
-          if (textQueue.isNotEmpty) {
-            final StyledNode child = node;
-            node = textQueue.removeLast();
-            node.children.add(child);
-          }
-
-          break;
-
-        case XmlState.Attribute:
-          if (e.key != null && attributes.isNotEmpty) {
-            attributes.last[e.key!] = e.value;
-          }
-          break;
-
-        case XmlState.Comment:
-        case XmlState.StartDocument:
-        case XmlState.EndDocument:
-        case XmlState.Namespace:
-        case XmlState.Top:
-          break;
-      }
-    }).onDone(() {
-      onParsed(node, true);
-    });
+        })
+        .onDone(() {
+          onParsed(node, true);
+        });
   }
 }

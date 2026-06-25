@@ -56,9 +56,7 @@ class StyledTagNode extends StyledNode {
   String? _textContent;
 
   /// Creates a node class to represent tags in the hierarchy of parsed text.
-  StyledTagNode({
-    this.tag,
-  });
+  StyledTagNode({this.tag});
 
   @override
   void dispose() {
@@ -80,7 +78,7 @@ class StyledTagNode extends StyledNode {
   }) {
     _recognizer =
         tag?.createRecognizer(_textContent ??= textContent, attributes) ??
-            recognizer;
+        recognizer;
     InlineSpan? result = (tag != null)
         ? tag!.createSpan(
             context: context,
@@ -106,9 +104,7 @@ class StyledTextNode extends StyledNode {
   final String? _rawText;
 
   /// Creates a node class to represent text in the parsed text hierarchy.
-  StyledTextNode({
-    String? text,
-  }) : _rawText = text;
+  StyledTextNode({String? text}) : _rawText = text;
 
   @override
   String? get text => _rawText

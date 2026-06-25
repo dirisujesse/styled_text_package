@@ -48,11 +48,7 @@ class StyledTextIconTag extends StyledTextTagBase {
     required Map<String?, String?> attributes,
     GestureRecognizer? recognizer,
   }) {
-    Widget iconWidget = Icon(
-      icon,
-      color: color,
-      size: size,
-    );
+    Widget iconWidget = Icon(icon, color: color, size: size);
     if (onTap != null) {
       iconWidget = GestureDetector(
         child: iconWidget,
