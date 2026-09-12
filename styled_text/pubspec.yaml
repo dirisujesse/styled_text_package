@@ -13,7 +13,7 @@ dependencies:
   flutter:
     sdk: flutter
   xmlstream: ^1.1.1
-  xml: ^6.5.0
+  xml: ^7.0.0
 
 dev_dependencies:
   flutter_test:
